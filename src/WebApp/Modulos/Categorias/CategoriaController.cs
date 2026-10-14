@@ -17,7 +17,7 @@ public sealed class CategoriaController(ServicoCategoria servicoCategoria) : Con
     [HttpGet]
     public ActionResult Cadastrar()
     {
-        CadastrarCategoriaViewModel viewModel = new("");
+        CadastrarCategoriaViewModel viewModel = new(string.Empty);
 
         return View(viewModel);
     }
