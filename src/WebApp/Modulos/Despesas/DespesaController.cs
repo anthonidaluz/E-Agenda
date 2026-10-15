@@ -143,7 +143,6 @@ public sealed class DespesaController(
         return RedirectToAction(nameof(Listar));
     }
 
-
     [HttpGet]
     public ActionResult Excluir(Guid id)
     {
