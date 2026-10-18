@@ -1,0 +1,59 @@
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Listagem de Contatos";
+}
+
+@model List<ContatoDto>;
+
+<a class="btn btn-outline-primary rounded-pill px-4 mb-3" asp-action="Cadastrar">Cadastrar Novo</a>
+
+@if (!string.IsNullOrWhiteSpace(TempData["MensagemErro"]?.ToString()))
+{
+    <div class="alert alert-danger border-start border-danger border-4 rounded-3" role="alert">
+        @TempData["MensagemErro"]!.ToString()
+    </div>
+}
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-primary border-start border-primary border-4 rounded-3" role="alert">
+        Nenhum contato cadastrado.
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2">
+        @foreach (ContatoDto c in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                            <h5 class="card-title mb-0">@c.Nome</h5>
+                            <span class="badge text-bg-primary rounded-pill">@c.Id.ToString("N")[..8]</span>
+                        </div>
+
+                        <dl class="row g-2 mb-4">
+                            <dt class="col-4 text-secondary fw-semibold">Email</dt>
+                            <dd class="col-8 mb-0 text-break">@c.Email</dd>
+
+                            <dt class="col-4 text-secondary fw-semibold">Telefone</dt>
+                            <dd class="col-8 mb-0">@c.Telefone</dd>
+
+                            <dt class="col-4 text-secondary fw-semibold">Cargo</dt>
+                            <dd class="col-8 mb-0">@(c.Cargo ?? "—")</dd>
+
+                            <dt class="col-4 text-secondary fw-semibold">Empresa</dt>
+                            <dd class="col-8 mb-0">@(c.Empresa ?? "—")</dd>
+                        </dl>
+
+                        <div class="d-flex flex-wrap gap-2 mt-auto justify-content-end">
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar" asp-route-id="@c.Id">Editar</a>
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Excluir" asp-route-id="@c.Id">Excluir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
