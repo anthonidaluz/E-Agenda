@@ -53,10 +53,15 @@ public sealed class ServicoContato(IRepositorioContato repositorioContato)
 
     public Result Excluir(Guid id)
     {
-        bool conseguiuExcluir = repositorioContato.Excluir(id);
+        Contato? contato = repositorioContato.SelecionarPorId(id);
 
-        if (!conseguiuExcluir)
+        if (contato == null)
             return Result.Fail("Não foi possível encontrar o contato informado.");
+
+        if (contato.Compromissos.Count > 0)
+            return Result.Fail("Não é possível excluir um contato com compromissos vinculados.");
+
+        repositorioContato.Excluir(id);
 
         return Result.Ok();
     }
