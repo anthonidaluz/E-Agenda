@@ -1,6 +1,7 @@
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using eAgenda.Dominio.Compartilhado;
+using eAgenda.Dominio.Modulos.Compromissos;
 
 namespace eAgenda.Dominio.Modulos.Contatos;
 
@@ -11,6 +12,7 @@ public sealed class Contato : EntidadeBase<Contato>
     public string Telefone { get; set; } = string.Empty;
     public string? Cargo { get; set; }
     public string? Empresa { get; set; }
+    public List<Compromisso> Compromissos { get; set; } = [];
 
     public Contato() { }
 
