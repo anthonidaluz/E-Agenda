@@ -1,0 +1,88 @@
+@using eAgenda.Dominio.Modulos.Compromissos
+@{
+    Layout = "_Layout";
+    ViewBag.Titulo = "Cadastro de Compromisso";
+}
+
+@model CadastrarCompromissoViewModel;
+
+<form class="card border-primary-subtle shadow-sm mx-auto p-4" style="max-width: 620px;" asp-action="Cadastrar" method="post">
+    <div class="mb-3">
+        <label asp-for="Assunto" class="form-label fw-semibold text-primary text-uppercase small">Assunto</label>
+        <input asp-for="Assunto" type="text" class="form-control">
+        <span asp-validation-for="Assunto" class="text-danger small fw-semibold"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DataOcorrencia" class="form-label fw-semibold text-primary text-uppercase small">Data de Ocorrência</label>
+        <input asp-for="DataOcorrencia" type="date" class="form-control">
+        <span asp-validation-for="DataOcorrencia" class="text-danger small fw-semibold"></span>
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-6">
+            <label asp-for="HoraInicio" class="form-label fw-semibold text-primary text-uppercase small">Hora de Início</label>
+            <input asp-for="HoraInicio" type="time" asp-format="{0:HH:mm}" class="form-control">
+            <span asp-validation-for="HoraInicio" class="text-danger small fw-semibold"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="HoraTermino" class="form-label fw-semibold text-primary text-uppercase small">Hora de Término</label>
+            <input asp-for="HoraTermino" type="time" asp-format="{0:HH:mm}" class="form-control">
+            <span asp-validation-for="HoraTermino" class="text-danger small fw-semibold"></span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Tipo" class="form-label fw-semibold text-primary text-uppercase small">Tipo</label>
+        <select asp-for="Tipo" class="form-select">
+            <option value="Remoto">Remoto</option>
+            <option value="Presencial">Presencial</option>
+        </select>
+        <span asp-validation-for="Tipo" class="text-danger small fw-semibold"></span>
+    </div>
+
+    <div class="mb-3" id="campoLink">
+        <label asp-for="Link" class="form-label fw-semibold text-primary text-uppercase small">Link</label>
+        <input asp-for="Link" type="url" class="form-control" placeholder="https://meet.exemplo.com/sala">
+        <span asp-validation-for="Link" class="text-danger small fw-semibold"></span>
+    </div>
+
+    <div class="mb-3" id="campoLocal">
+        <label asp-for="Local" class="form-label fw-semibold text-primary text-uppercase small">Local</label>
+        <input asp-for="Local" type="text" class="form-control">
+        <span asp-validation-for="Local" class="text-danger small fw-semibold"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ContatoId" class="form-label fw-semibold text-primary text-uppercase small">Contato (opcional)</label>
+        <select asp-for="ContatoId" class="form-select">
+            <option value="">Nenhum</option>
+            @foreach (ContatoCompromissoDto contato in Model.ContatosDisponiveis)
+            {
+                <option value="@contato.Id">@contato.Nome</option>
+            }
+        </select>
+        <span asp-validation-for="ContatoId" class="text-danger small fw-semibold"></span>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <a class="btn btn-outline-primary rounded-pill px-4" asp-action="Listar">Voltar</a>
+        <button class="btn btn-primary rounded-pill px-4" type="submit">Confirmar</button>
+    </div>
+</form>
+
+@* Exibe apenas o campo de Link ou de Local conforme o tipo selecionado *@
+<script>
+    const campoTipo = document.getElementById("Tipo");
+
+    function atualizarCamposTipo() {
+        const remoto = campoTipo.value === "@TipoCompromisso.Remoto";
+
+        document.getElementById("campoLink").hidden = !remoto;
+        document.getElementById("campoLocal").hidden = remoto;
+    }
+
+    campoTipo.addEventListener("change", atualizarCamposTipo);
+    atualizarCamposTipo();
+</script>
