@@ -8,17 +8,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    @* Aplica o tema salvo (ou o do sistema) antes de renderizar a página, evitando o "piscar" do tema claro *@
+    @* Aplica o tema salvo antes de renderizar a página (o padrão é o tema claro) *@
     <script>
         (() => {
             let tema = null;
 
             try { tema = localStorage.getItem("tema"); } catch { }
 
-            if (tema !== "light" && tema !== "dark")
-                tema = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-
-            document.documentElement.setAttribute("data-bs-theme", tema);
+            document.documentElement.setAttribute("data-bs-theme", tema === "dark" ? "dark" : "light");
         })();
     </script>
 
@@ -175,9 +172,13 @@
                     <a class="nav-link @(controllerAtual == "Despesa" ? "active fw-semibold" : "")" asp-controller="Despesa" asp-action="Listar">Despesas</a>
                     <a class="nav-link @(controllerAtual == "Tarefa" ? "active fw-semibold" : "")" asp-controller="Tarefa" asp-action="Listar">Tarefas</a>
 
-                    <button id="alternarTema" class="btn btn-outline-secondary btn-sm rounded-pill ms-lg-3 mt-2 mt-lg-0" type="button" title="Alternar tema" aria-label="Alternar tema">
+                    <div class="d-flex align-items-center gap-2 ms-lg-3 mt-2 mt-lg-0 text-body-secondary">
+                        <i class="bi bi-sun"></i>
+                        <div class="form-check form-switch mb-0">
+                            <input id="alternarTema" class="form-check-input" type="checkbox" role="switch" title="Modo escuro" aria-label="Modo escuro">
+                        </div>
                         <i class="bi bi-moon-stars"></i>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -199,20 +200,14 @@
     @* Alternância entre tema claro e escuro *@
     <script>
         (() => {
-            const botao = document.getElementById("alternarTema");
-            const icone = botao.querySelector(".bi");
+            const interruptor = document.getElementById("alternarTema");
 
-            function aplicarIcone(tema) {
-                icone.className = tema === "dark" ? "bi bi-sun" : "bi bi-moon-stars";
-            }
+            interruptor.checked = document.documentElement.getAttribute("data-bs-theme") === "dark";
 
-            aplicarIcone(document.documentElement.getAttribute("data-bs-theme"));
-
-            botao.addEventListener("click", () => {
-                const novoTema = document.documentElement.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+            interruptor.addEventListener("change", () => {
+                const novoTema = interruptor.checked ? "dark" : "light";
 
                 document.documentElement.setAttribute("data-bs-theme", novoTema);
-                aplicarIcone(novoTema);
 
                 try { localStorage.setItem("tema", novoTema); } catch { }
             });
