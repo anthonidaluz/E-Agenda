@@ -1,56 +1,37 @@
 @{
     Layout = "_Layout";
     ViewBag.Titulo = "Início";
+
+    (string Titulo, string Descricao, string Controller, string Icone, string Cor)[] modulos =
+    [
+        ("Contatos", "Cadastre e gerencie os seus contatos", "Contato", "bi-person-lines-fill", "primary"),
+        ("Compromissos", "Agende os seus compromissos", "Compromisso", "bi-calendar-event", "info"),
+        ("Categorias", "Cadastre as categorias de despesas", "Categoria", "bi-tags", "secondary"),
+        ("Despesas", "Cadastre as suas despesas diárias", "Despesa", "bi-wallet2", "success"),
+        ("Tarefas", "Cadastre e gerencie as suas tarefas", "Tarefa", "bi-check2-square", "warning")
+    ];
 }
 
-<div class="row g-4 pb-4">
-    <div class="col-md-6 col-lg-4">
-        <div class="card border-primary-subtle shadow-sm">
-            <div class="card-body text-center p-4">
-                <h5 class="card-title text-primary">Contatos</h5>
-                <p class="card-text text-secondary">Cadastre e gerencie os seus contatos</p>
-                <a class="btn btn-outline-primary rounded-pill px-4" asp-controller="Contato" asp-action="Listar">Acessar</a>
-            </div>
-        </div>
-    </div>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 pb-4">
+    @foreach (var modulo in modulos)
+    {
+        <div class="col">
+            <div class="card card-modulo h-100 border-0">
+                <div class="card-body d-flex flex-column align-items-start gap-3 p-4">
+                    <div class="card-icone bg-@modulo.Cor-subtle text-@modulo.Cor-emphasis">
+                        <i class="bi @modulo.Icone"></i>
+                    </div>
 
-    <div class="col-md-6 col-lg-4">
-        <div class="card border-primary-subtle shadow-sm">
-            <div class="card-body text-center p-4">
-                <h5 class="card-title text-primary">Compromissos</h5>
-                <p class="card-text text-secondary">Agende os seus compromissos</p>
-                <a class="btn btn-outline-primary rounded-pill px-4" asp-controller="Compromisso" asp-action="Listar">Acessar</a>
-            </div>
-        </div>
-    </div>
+                    <div>
+                        <h5 class="card-title fw-semibold mb-1">@modulo.Titulo</h5>
+                        <p class="card-text text-body-secondary mb-0">@modulo.Descricao</p>
+                    </div>
 
-    <div class="col-md-6 col-lg-4">
-        <div class="card border-primary-subtle shadow-sm">
-            <div class="card-body text-center p-4">
-                <h5 class="card-title text-primary">Categorias</h5>
-                <p class="card-text text-secondary">Cadastre as categorias de despesas</p>
-                <a class="btn btn-outline-primary rounded-pill px-4" asp-controller="Categoria" asp-action="Listar">Acessar</a>
+                    <a class="btn btn-outline-primary rounded-pill px-4 mt-auto stretched-link" asp-controller="@modulo.Controller" asp-action="Listar">
+                        Acessar <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-6 col-lg-4">
-        <div class="card border-primary-subtle shadow-sm">
-            <div class="card-body text-center p-4">
-                <h5 class="card-title text-primary">Despesas</h5>
-                <p class="card-text text-secondary">Cadastre as suas despesas diáris</p>
-                <a class="btn btn-outline-primary rounded-pill px-4" asp-controller="Despesa" asp-action="Listar">Acessar</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 col-lg-4">
-        <div class="card border-primary-subtle shadow-sm">
-            <div class="card-body text-center p-4">
-                <h5 class="card-title text-primary">Tarefas</h5>
-                <p class="card-text text-secondary">Cadastre e gerencia as suas tarefas</p>
-                <a class="btn btn-outline-primary rounded-pill px-4" asp-controller="Tarefa" asp-action="Listar">Acessar</a>
-            </div>
-        </div>
-    </div>
+    }
 </div>

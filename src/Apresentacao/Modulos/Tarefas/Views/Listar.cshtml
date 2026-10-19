@@ -1,3 +1,4 @@
+@using eAgenda.Dominio.Modulos.Tarefas
 @{
     Layout = "_Layout";
     ViewBag.Titulo = "Listagem de Tarefas";
@@ -5,7 +6,7 @@
 
 @model List<TarefaDto>;
 
-<a class="btn btn-outline-primary rounded-pill px-4 mb-3" asp-action="Cadastrar">Cadastrar Nova</a>
+<a class="btn btn-primary rounded-pill px-4 mb-4" asp-action="Cadastrar"><i class="bi bi-plus-lg me-1"></i> Cadastrar Nova</a>
 
 @if (!string.IsNullOrWhiteSpace(TempData["MensagemErro"]?.ToString()))
 {
@@ -22,39 +23,61 @@
 }
 else
 {
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
         @foreach (TarefaDto t in Model)
         {
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+            string cor = t.Prioridade switch
+            {
+                PrioridadeTarefa.Alta => "danger",
+                PrioridadeTarefa.Normal => "warning",
+                _ => "secondary"
+            };
 
-                            <div class="d-flex flex-column gap-1">
-                                <div class="d-flex gap-2 my-1">
-                                    <span class="badge bg-secondary rounded-pill small">@t.Prioridade.ToString()</span>
-                                </div>
-                                <h5 class="card-title mb-0">@t.Titulo</h5>
+            <div class="col">
+                <div class="card card-item acento-@cor h-100">
+                    <div class="card-body d-flex flex-column p-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="card-icone @(t.Concluida ? "bg-success-subtle text-success-emphasis" : $"bg-{cor}-subtle text-{cor}-emphasis")">
+                                <i class="bi @(t.Concluida ? "bi-check2-circle" : "bi-list-check")"></i>
                             </div>
 
-                            <span class="badge text-bg-primary rounded-pill">@t.Id.ToString("N")[..8]</span>
+                            <div class="flex-grow-1 text-truncate">
+                                <div class="d-flex gap-1 mb-1">
+                                    <span class="badge rounded-pill bg-@cor-subtle text-@cor-emphasis"><i class="bi bi-flag me-1"></i>@t.Prioridade</span>
+                                    @if (t.Concluida)
+                                    {
+                                        <span class="badge rounded-pill bg-success-subtle text-success-emphasis">Concluída</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge rounded-pill bg-body-tertiary text-body-secondary border">Pendente</span>
+                                    }
+                                </div>
+                                <h5 class="card-title fw-semibold mb-0 text-truncate @(t.Concluida ? "text-decoration-line-through text-body-secondary" : "")">@t.Titulo</h5>
+                            </div>
+
+                            <span class="badge card-id rounded-pill align-self-start">#@t.Id.ToString("N")[..8]</span>
                         </div>
 
-                        <dl class="row g-2 mb-4">
-                            <dt class="col-5 text-secondary fw-semibold">Data de Criação</dt>
+                        <dl class="row g-2 mb-3 small">
+                            <dt class="col-5"><i class="bi bi-calendar3"></i>Criada em</dt>
                             <dd class="col-7 mb-0">@t.DataCriacao.ToShortDateString()</dd>
 
-                            <dt class="col-5 text-secondary fw-semibold">Situação</dt>
-                            <dd class="col-7 mb-0">@(t.Concluida ? "Concluída" : "Pendente")</dd>
-
-                            <dt class="col-5 text-secondary fw-semibold">Itens</dt>
-                            <dd class="col-7 mb-0">@t.Itens.Count(i => i.Concluido)/@t.Itens.Count (@t.PercentualConcluido%)</dd>
+                            <dt class="col-5"><i class="bi bi-list-ul"></i>Itens</dt>
+                            <dd class="col-7 mb-0">@t.Itens.Count(i => i.Concluido) de @t.Itens.Count concluídos</dd>
                         </dl>
 
-                        <div class="d-flex flex-wrap gap-2 mt-auto justify-content-end">
-                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="GerenciarItens" asp-route-tarefaId="@t.Id">Itens</a>
-                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar" asp-route-id="@t.Id">Editar</a>
-                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Excluir" asp-route-id="@t.Id">Excluir</a>
+                        <div class="d-flex align-items-center gap-2 mb-4">
+                            <div class="progress progress-fino flex-grow-1" role="progressbar" aria-label="Percentual concluído" aria-valuenow="@t.PercentualConcluido" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar @(t.Concluida ? "bg-success" : "")" style="width: @t.PercentualConcluido%"></div>
+                            </div>
+                            <span class="small fw-semibold text-body-secondary">@t.PercentualConcluido%</span>
+                        </div>
+
+                        <div class="card-acoes d-flex flex-wrap gap-2 mt-auto pt-3 justify-content-end">
+                            <a class="btn btn-outline-secondary btn-sm rounded-pill px-3" asp-action="GerenciarItens" asp-route-tarefaId="@t.Id"><i class="bi bi-list-check me-1"></i>Itens</a>
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar" asp-route-id="@t.Id"><i class="bi bi-pencil me-1"></i>Editar</a>
+                            <a class="btn btn-outline-danger btn-sm rounded-pill px-3" asp-action="Excluir" asp-route-id="@t.Id"><i class="bi bi-trash me-1"></i>Excluir</a>
                         </div>
                     </div>
                 </div>

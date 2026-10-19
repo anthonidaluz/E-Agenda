@@ -6,7 +6,7 @@
 
 @model List<CompromissoDto>;
 
-<a class="btn btn-outline-primary rounded-pill px-4 mb-3" asp-action="Cadastrar">Cadastrar Novo</a>
+<a class="btn btn-primary rounded-pill px-4 mb-4" asp-action="Cadastrar"><i class="bi bi-plus-lg me-1"></i> Cadastrar Novo</a>
 
 @if (!string.IsNullOrWhiteSpace(TempData["MensagemErro"]?.ToString()))
 {
@@ -23,48 +23,56 @@
 }
 else
 {
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
         @foreach (CompromissoDto c in Model)
         {
+            bool remoto = c.Tipo == TipoCompromisso.Remoto;
+            string cor = remoto ? "info" : "success";
+
             <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                            <div class="d-flex flex-column gap-1">
-                                <div class="my-1">
-                                    <span class="badge bg-secondary rounded-pill small">@c.Tipo</span>
-                                </div>
-                                <h5 class="card-title mb-0">@c.Assunto</h5>
+                <div class="card card-item acento-@cor h-100">
+                    <div class="card-body d-flex flex-column p-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="card-icone card-data bg-@cor-subtle text-@cor-emphasis">
+                                <span class="dia">@c.DataOcorrencia.ToString("dd")</span>
+                                <span class="mes">@c.DataOcorrencia.ToString("MMM")</span>
                             </div>
 
-                            <span class="badge text-bg-primary rounded-pill">@c.Id.ToString("N")[..8]</span>
+                            <div class="flex-grow-1 text-truncate">
+                                <span class="badge rounded-pill bg-@cor-subtle text-@cor-emphasis mb-1">
+                                    <i class="bi @(remoto ? "bi-camera-video" : "bi-geo-alt") me-1"></i>@c.Tipo
+                                </span>
+                                <h5 class="card-title fw-semibold mb-0 text-truncate">@c.Assunto</h5>
+                            </div>
+
+                            <span class="badge card-id rounded-pill align-self-start">#@c.Id.ToString("N")[..8]</span>
                         </div>
 
-                        <dl class="row g-2 mb-4">
-                            <dt class="col-4 text-secondary fw-semibold">Data</dt>
+                        <dl class="row g-2 mb-4 small">
+                            <dt class="col-4"><i class="bi bi-calendar3"></i>Data</dt>
                             <dd class="col-8 mb-0">@c.DataOcorrencia.ToShortDateString()</dd>
 
-                            <dt class="col-4 text-secondary fw-semibold">Horário</dt>
+                            <dt class="col-4"><i class="bi bi-clock"></i>Horário</dt>
                             <dd class="col-8 mb-0">@c.HoraInicio.ToString("HH:mm") às @c.HoraTermino.ToString("HH:mm")</dd>
 
-                            @if (c.Tipo == TipoCompromisso.Remoto)
+                            @if (remoto)
                             {
-                                <dt class="col-4 text-secondary fw-semibold">Link</dt>
+                                <dt class="col-4"><i class="bi bi-link-45deg"></i>Link</dt>
                                 <dd class="col-8 mb-0 text-break"><a href="@c.Link" target="_blank" rel="noopener noreferrer">@c.Link</a></dd>
                             }
                             else
                             {
-                                <dt class="col-4 text-secondary fw-semibold">Local</dt>
+                                <dt class="col-4"><i class="bi bi-geo-alt"></i>Local</dt>
                                 <dd class="col-8 mb-0">@c.Local</dd>
                             }
 
-                            <dt class="col-4 text-secondary fw-semibold">Contato</dt>
+                            <dt class="col-4"><i class="bi bi-person"></i>Contato</dt>
                             <dd class="col-8 mb-0">@(c.Contato?.Nome ?? "—")</dd>
                         </dl>
 
-                        <div class="d-flex flex-wrap gap-2 mt-auto justify-content-end">
-                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar" asp-route-id="@c.Id">Editar</a>
-                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Excluir" asp-route-id="@c.Id">Excluir</a>
+                        <div class="card-acoes d-flex flex-wrap gap-2 mt-auto pt-3 justify-content-end">
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar" asp-route-id="@c.Id"><i class="bi bi-pencil me-1"></i>Editar</a>
+                            <a class="btn btn-outline-danger btn-sm rounded-pill px-3" asp-action="Excluir" asp-route-id="@c.Id"><i class="bi bi-trash me-1"></i>Excluir</a>
                         </div>
                     </div>
                 </div>

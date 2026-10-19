@@ -6,7 +6,7 @@
 
 @model List<DespesaDto>;
 
-<a class="btn btn-outline-primary rounded-pill px-4 mb-3" asp-action="Cadastrar">Cadastrar Nova</a>
+<a class="btn btn-primary rounded-pill px-4 mb-4" asp-action="Cadastrar"><i class="bi bi-plus-lg me-1"></i> Cadastrar Nova</a>
 
 @if (!string.IsNullOrWhiteSpace(TempData["MensagemErro"]?.ToString()))
 {
@@ -23,52 +23,49 @@
 }
 else
 {
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
         @foreach (DespesaDto d in Model)
         {
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+            (string Descricao, string Icone) formaPagamento = d.FormaPagamento switch
+            {
+                FormaPagamento.AVista => ("À Vista", "bi-cash-coin"),
+                FormaPagamento.Credito => ("Crédito", "bi-credit-card"),
+                _ => ("Débito", "bi-credit-card-2-front")
+            };
 
-                            <div class="d-flex flex-column gap-1">
-                                <div class="d-flex gap-2 my-1">
-                                    @foreach (CategoriaDespesaDto categoria in d.Categorias)
-                                    {
-                                        <span class="badge bg-secondary rounded-pill small">@categoria.Titulo</span>
-                                    }
-                                </div>
-                                <h5 class="card-title mb-0">@d.Descricao</h5>
+            <div class="col">
+                <div class="card card-item acento-success h-100">
+                    <div class="card-body d-flex flex-column p-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="card-icone bg-success-subtle text-success-emphasis">
+                                <i class="bi bi-wallet2"></i>
                             </div>
 
-                            <span class="badge text-bg-primary rounded-pill">@d.Id.ToString("N")[..8]</span>
+                            <div class="flex-grow-1 text-truncate">
+                                <h5 class="card-title fw-semibold mb-0 text-truncate">@d.Descricao</h5>
+                                <div class="small text-body-secondary">@d.DataOcorrencia.ToShortDateString()</div>
+                            </div>
+
+                            <span class="badge card-id rounded-pill align-self-start">#@d.Id.ToString("N")[..8]</span>
                         </div>
 
-                        <dl class="row g-2 mb-4">
-                            <dt class="col-5 text-secondary fw-semibold">Data de Ocorrência</dt>
-                            <dd class="col-7 mb-0">@d.DataOcorrencia.ToShortDateString()</dd>
+                        <div class="d-flex justify-content-between align-items-end mb-3">
+                            <span class="fs-4 fw-bold">@d.Valor.ToString("C2")</span>
+                            <span class="badge rounded-pill bg-body-tertiary text-body-emphasis border">
+                                <i class="bi @formaPagamento.Icone me-1"></i>@formaPagamento.Descricao
+                            </span>
+                        </div>
 
-                            <dt class="col-5 text-secondary fw-semibold">Forma de Pagamento</dt>
-                            @if (d.FormaPagamento == FormaPagamento.AVista)
+                        <div class="d-flex flex-wrap gap-1 mb-4">
+                            @foreach (CategoriaDespesaDto categoria in d.Categorias)
                             {
-                                <dd class="col-7 mb-0">À Vista</dd>
+                                <span class="badge rounded-pill bg-secondary-subtle text-secondary-emphasis"><i class="bi bi-tag me-1"></i>@categoria.Titulo</span>
                             }
-                            else if (d.FormaPagamento == FormaPagamento.Credito)
-                            {
-                                <dd class="col-7 mb-0">Crédito</dd>
-                            }
-                            else
-                            {
-                                <dd class="col-7 mb-0">Débito</dd>
-                            }
+                        </div>
 
-                            <dt class="col-5 text-secondary fw-semibold">Valor</dt>
-                            <dd class="col-7 mb-0">@d.Valor.ToString("C2")</dd>
-                        </dl>
-
-                        <div class="d-flex flex-wrap gap-2 mt-auto justify-content-end">
-                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar" asp-route-id="@d.Id">Editar</a>
-                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Excluir" asp-route-id="@d.Id">Excluir</a>
+                        <div class="card-acoes d-flex flex-wrap gap-2 mt-auto pt-3 justify-content-end">
+                            <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-action="Editar" asp-route-id="@d.Id"><i class="bi bi-pencil me-1"></i>Editar</a>
+                            <a class="btn btn-outline-danger btn-sm rounded-pill px-3" asp-action="Excluir" asp-route-id="@d.Id"><i class="bi bi-trash me-1"></i>Excluir</a>
                         </div>
                     </div>
                 </div>
