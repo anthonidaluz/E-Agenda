@@ -4,6 +4,14 @@
 
 Desenvolvido durante o curso Backend da [Academia do Programador](https://www.academiadoprogramador.net) 2026
 
+## Demonstração
+
+A aplicação está publicada no Azure (App Service + Azure SQL):
+
+**https://eagenda-anthoni.azurewebsites.net**
+
+> O primeiro acesso pode levar alguns segundos, pois o plano gratuito hiberna a aplicação e o banco quando ficam ociosos.
+
 ## Funcionalidades
 
 ### 1. Módulo de Contatos
@@ -145,7 +153,7 @@ Campos obrigatórios:
 4. Para executar o projeto compilando em tempo real
 
    ```bash
-   dotnet run --project src/WebApp
+   dotnet run --project src/Apresentacao
    ```
 
 ## Requisitos
