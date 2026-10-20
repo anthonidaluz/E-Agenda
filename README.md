@@ -10,8 +10,6 @@ A aplicação está publicada no Azure (App Service + Azure SQL):
 
 **https://eagenda-anthoni.azurewebsites.net**
 
-> O primeiro acesso pode levar alguns segundos, pois o plano gratuito hiberna a aplicação e o banco quando ficam ociosos.
-
 ## Funcionalidades
 
 ### 1. Módulo de Contatos
