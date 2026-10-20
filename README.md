@@ -1,5 +1,7 @@
 # e-Agenda
 
+<img width="1920" height="929" alt="chrome_S9afBlGK9D" src="https://github.com/user-attachments/assets/b9e3d4d2-cfdf-4192-9530-5a5bb5e40522" />
+
 ## Projeto
 
 Desenvolvido durante o curso Backend da [Academia do Programador](https://www.academiadoprogramador.net) 2026
